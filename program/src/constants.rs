@@ -12,6 +12,9 @@ pub const MIN_BETTING_DURATION: i64 = 60; // 1 minute minimum
 pub const MAX_BETTING_DURATION: i64 = 86400 * 7; // 7 days maximum
 pub const SETTLEMENT_TIMEOUT: i64 = 86400; // 24 hours to settle after betting closes
 
+pub const BETTING_WINDOW_DURATION: i64 = 10; // 10 seconds betting window
+
+
 // Round configuration
 pub const MAX_PREDICTIONS_PER_ROUND: u32 = 10000;
 pub const MAX_OUTCOMES: u8 = 10; // Maximum number of possible outcomes

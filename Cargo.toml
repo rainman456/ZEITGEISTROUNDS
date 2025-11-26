@@ -1,0 +1,23 @@
+[workspace]
+members = [
+    "program/*",
+]
+resolver = "2"
+
+[workspace.dependencies]
+proc-macro2 = "=1.0.81"
+
+[profile.release]
+opt-level = "z"
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+overflow-checks = true
+incremental = true
+
+[profile.release.build-override]
+opt-level = 3
+incremental = true
+codegen-units = 1
+
+

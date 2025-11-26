@@ -78,6 +78,8 @@ pub fn handler(
     
     // Update round
     round.add_prediction(amount, outcome)?;
+
+    //let user_stats = &mut ctx.accounts.user_stats;
     
     // Initialize or update user stats
     if ctx.accounts.user_stats.data_is_empty() {

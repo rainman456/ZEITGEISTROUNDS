@@ -10,6 +10,17 @@ pub enum RoundStatus {
     Cancelled,   // Round cancelled, refunds available
 }
 
+
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
+pub enum VerificationMethod {
+    PythPrice,        // Use Pyth oracle
+    OnChainData,      // Use Solana blockchain data
+    TwitterAPI,       // External API (backend)
+    SwitchboardVRF,   // Random number
+}
+
+
 #[account]
 #[derive(InitSpace)]
 pub struct Round {
@@ -51,6 +62,24 @@ pub struct Round {
     
     /// Bump seed for PDA derivation
     pub bump: u8,
+
+     /// Betting window closes after this time (start_time + 10 seconds)
+    pub betting_close_time: i64,
+
+      #[max_len(200)]
+    pub question: String,
+
+       pub verification_method: VerificationMethod,
+    
+    /// Target value for comparison (e.g., price in cents: 15000 = $150.00)
+    pub target_value: i64,
+    
+    /// Data source address (e.g., Pyth price feed pubkey)
+    pub data_source: Pubkey,
+    
+    /// Authorized oracle that can settle this round
+    pub oracle: Pubkey,
+    
 }
 
 impl Round {
@@ -59,7 +88,8 @@ impl Round {
     pub fn is_betting_active(&self, current_time: i64) -> bool {
         self.status == RoundStatus::Active 
             && current_time >= self.start_time 
-            && current_time < self.end_time
+            //&& current_time < self.end_time
+            && current_time < self.betting_close_time
     }
     
     pub fn is_betting_ended(&self, current_time: i64) -> bool {

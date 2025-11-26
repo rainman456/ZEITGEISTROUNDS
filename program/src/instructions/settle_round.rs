@@ -11,7 +11,7 @@ pub fn handler(
     ctx: Context<SettleRound>,
     round_id: u64,
     winning_outcome: u8,
-    winning_pool_amount: u64,
+    //winning_pool_amount: u64,
 ) -> Result<()> {
     let global_state = &ctx.accounts.global_state;
     let round = &mut ctx.accounts.round;

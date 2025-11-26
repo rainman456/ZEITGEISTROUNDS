@@ -28,11 +28,18 @@ pub fn handler(
     
     validate_future_timestamp(start_time, clock.unix_timestamp)?;
     validate_betting_duration(start_time, end_time, MIN_BETTING_DURATION, MAX_BETTING_DURATION)?;
+
+
+      // Calculate betting close time (10 seconds after start)
+    let betting_close_time = start_time
+        .checked_add(10)
+        .ok_or(SocialRouletteError::ArithmeticOverflow)?
     
     // Initialize all round fields explicitly
     round.round_id = round_id;
     round.creator = ctx.accounts.creator.key();
     round.start_time = start_time;
+    round.betting_close_time = betting_close_time;  // ✅ Add this
     round.end_time = end_time;
     round.total_pool = 0;
     round.total_predictions = 0;
@@ -43,6 +50,7 @@ pub fn handler(
     round.winning_pool = 0;
     round.status = RoundStatus::Active;
     round.bump = ctx.bumps.round;
+    round.question = description;
     
     // Update global state
     global_state.increment_rounds()?;
