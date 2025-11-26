@@ -26,11 +26,14 @@ pub struct CreateRound<'info> {
     
     /// CHECK: Vault PDA that will hold round funds
     #[account(
-        init,
-        payer = creator,
-        space = 0,  // ✅ No data, just holds lamports
-        seeds = [VAULT_SEED, round_id.to_le_bytes().as_ref()],
-        bump
+       // init,
+       // payer = creator,
+        //space = 0,  // ✅ No data, just holds lamports
+       // seeds = [VAULT_SEED, round_id.to_le_bytes().as_ref()],
+        //bump
+        mut,
+    seeds = [VAULT_SEED, round_id.to_le_bytes().as_ref()],
+    bump
     )]
     pub vault: SystemAccount<'info>,
     

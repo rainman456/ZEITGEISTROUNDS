@@ -50,7 +50,23 @@ pub fn handler(
     round.winning_pool = 0;
     round.status = RoundStatus::Active;
     round.bump = ctx.bumps.round;
-    round.question = description;
+    // Manually initialize vault by transferring rent-exempt minimum
+let rent = Rent::get()?;
+let vault_rent_exempt = rent.minimum_balance(0);
+
+if ctx.accounts.vault.lamports() == 0 {
+    anchor_lang::system_program::transfer(
+        CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
+            anchor_lang::system_program::Transfer {
+                from: ctx.accounts.creator.to_account_info(),
+                to: ctx.accounts.vault.to_account_info(),
+            },
+        ),
+        vault_rent_exempt,
+    )?;
+}
+    round.question = description.clone();
     
     // Update global state
     global_state.increment_rounds()?;
