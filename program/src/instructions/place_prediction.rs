@@ -17,19 +17,8 @@ pub fn handler(
     let global_state = &mut ctx.accounts.global_state;
     let round = &mut ctx.accounts.round;
     let prediction = &mut ctx.accounts.prediction;
+    let user_stats = &mut ctx.accounts.user_stats;
     let clock = Clock::get()?;
-    
-    // Derive user stats PDA
-    let user_key = ctx.accounts.user.key();
-    let (user_stats_pda, user_stats_bump) = Pubkey::find_program_address(
-        &[USER_STATS_SEED, user_key.as_ref()],
-        ctx.program_id,
-    );
-    
-    require!(
-        ctx.accounts.user_stats.key() == user_stats_pda,
-        SocialRouletteError::Unauthorized
-    );
     
     // Validate betting is active
     require!(
@@ -67,7 +56,7 @@ pub fn handler(
         amount,
     )?;
     
-    // Initialize prediction fields explicitly
+    // Initialize prediction fields
     prediction.round_id = round_id;
     prediction.user = ctx.accounts.user.key();
     prediction.amount = amount;
@@ -78,48 +67,19 @@ pub fn handler(
     
     // Update round
     round.add_prediction(amount, outcome)?;
-
-    //let user_stats = &mut ctx.accounts.user_stats;
     
-    // Initialize or update user stats
-    if ctx.accounts.user_stats.data_is_empty() {
-        // Create user stats account
-        let space = 8 + UserStats::INIT_SPACE;
-        let rent = Rent::get()?;
-        let lamports = rent.minimum_balance(space);
-        
-        system_program::create_account(
-            CpiContext::new(
-                ctx.accounts.system_program.to_account_info(),
-                system_program::CreateAccount {
-                    from: ctx.accounts.user.to_account_info(),
-                    to: ctx.accounts.user_stats.to_account_info(),
-                },
-            ),
-            lamports,
-            space as u64,
-            ctx.program_id,
-        )?;
-        
-        // Initialize user stats data
-        let mut data = ctx.accounts.user_stats.try_borrow_mut_data()?;
-        let mut user_stats = UserStats::try_from_slice(&[0u8; 8 + UserStats::INIT_SPACE])?;
+    // ✅ Initialize user stats if first time (init_if_needed handles account creation)
+    if user_stats.total_predictions == 0 {
         user_stats.user = ctx.accounts.user.key();
-        user_stats.total_predictions = 0;
         user_stats.total_wins = 0;
         user_stats.total_wagered = 0;
         user_stats.total_won = 0;
         user_stats.net_profit = 0;
-        user_stats.bump = user_stats_bump;
-        user_stats.record_prediction(amount)?;
-        user_stats.serialize(&mut &mut data[..])?;
-    } else {
-        // Update existing user stats
-        let mut data = ctx.accounts.user_stats.try_borrow_mut_data()?;
-        let mut user_stats = UserStats::try_from_slice(&data)?;
-        user_stats.record_prediction(amount)?;
-        user_stats.serialize(&mut &mut data[..])?;
+        user_stats.bump = ctx.bumps.user_stats;
     }
+    
+    // Update user stats
+    user_stats.record_prediction(amount)?;
     
     // Update global volume
     global_state.add_volume(amount)?;

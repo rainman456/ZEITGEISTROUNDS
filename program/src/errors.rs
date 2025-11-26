@@ -75,4 +75,9 @@ pub enum SocialRouletteError {
     
     #[msg("Round does not belong to this tournament")]
     InvalidTournamentRound,
+
+     #[msg("Program is currently paused")]  // ✅ Add this
+    ProgramPaused,
+
+    
 }

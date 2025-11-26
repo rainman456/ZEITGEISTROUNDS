@@ -33,7 +33,7 @@ pub fn handler(
       // Calculate betting close time (10 seconds after start)
     let betting_close_time = start_time
         .checked_add(10)
-        .ok_or(SocialRouletteError::ArithmeticOverflow)?
+        .ok_or(SocialRouletteError::ArithmeticOverflow)?;
     
     // Initialize all round fields explicitly
     round.round_id = round_id;

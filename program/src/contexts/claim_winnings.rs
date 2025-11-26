@@ -17,7 +17,8 @@ pub struct ClaimWinnings<'info> {
         mut,
         seeds = [PREDICTION_SEED, round_id.to_le_bytes().as_ref(), user.key().as_ref()],
         bump = prediction.bump,
-        constraint = prediction.user == user.key()
+        constraint = prediction.user == user.key(),
+        close = user
     )]
     pub prediction: Account<'info, Prediction>,
     

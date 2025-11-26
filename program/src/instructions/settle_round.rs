@@ -1,7 +1,7 @@
 // Settle round instruction
 
 use anchor_lang::prelude::*;
-use anchor_lang::system_program;
+//use anchor_lang::system_program;
 use crate::contexts::SettleRound;
 use crate::events::RoundSettled;
 use crate::errors::SocialRouletteError;
@@ -11,7 +11,7 @@ pub fn handler(
     ctx: Context<SettleRound>,
     round_id: u64,
     winning_outcome: u8,
-    //winning_pool_amount: u64,
+    winning_pool_amount: u64,  // ✅ Keep this parameter
 ) -> Result<()> {
     let global_state = &ctx.accounts.global_state;
     let round = &mut ctx.accounts.round;
@@ -33,6 +33,10 @@ pub fn handler(
         winning_outcome < round.num_outcomes,
         SocialRouletteError::InvalidOutcome
     );
+    
+    // ✅ IMPORTANT: winning_pool_amount must be calculated by backend
+    // Backend iterates through all prediction accounts to sum the winning side
+    // This value is trusted from admin/oracle
     
     // Calculate platform fee
     let platform_fee = calculate_platform_fee(round.total_pool, global_state.platform_fee_bps)?;

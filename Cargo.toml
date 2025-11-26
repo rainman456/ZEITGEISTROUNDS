@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "program/*",
+    "program",  # ✅ Correct - point to directory with Cargo.toml
 ]
 resolver = "2"
 
@@ -13,11 +13,9 @@ lto = "thin"
 codegen-units = 1
 panic = "abort"
 overflow-checks = true
-incremental = true
+incremental = false  # ✅ Changed from true to false for release
 
 [profile.release.build-override]
 opt-level = 3
-incremental = true
+incremental = false  # ✅ Changed from true to false
 codegen-units = 1
-
-
