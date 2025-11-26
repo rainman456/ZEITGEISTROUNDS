@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 declare_id!("24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT");
 
-// Module declarations - MUST come before #[program]
+// Module declarations
 pub mod constants;
 pub mod errors;
 pub mod events;
@@ -11,9 +11,8 @@ pub mod utils;
 pub mod contexts;
 pub mod instructions;
 
-// Re-export contexts for cleaner syntax
-use contexts::*;
-use instructions::*;
+// Re-export all contexts at crate root for Anchor macro
+pub use contexts::*;
 
 #[program]
 pub mod zeitgeist {
@@ -21,7 +20,7 @@ pub mod zeitgeist {
 
     /// Initialize the global state (one-time setup)
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        initialize::handler(ctx)
+        instructions::initialize::handler(ctx)
     }
 
     /// Create a new prediction round
@@ -33,7 +32,7 @@ pub mod zeitgeist {
         num_outcomes: u8,
         description: String,
     ) -> Result<()> {
-        create_round::handler(ctx, round_id, start_time, end_time, num_outcomes, description)
+        instructions::create_round::handler(ctx, round_id, start_time, end_time, num_outcomes, description)
     }
 
     /// Place a prediction on a round
@@ -43,12 +42,12 @@ pub mod zeitgeist {
         outcome: u8,
         amount: u64,
     ) -> Result<()> {
-        place_prediction::handler(ctx, round_id, outcome, amount)
+        instructions::place_prediction::handler(ctx, round_id, outcome, amount)
     }
 
     /// Close betting for a round (after end_time)
     pub fn close_betting(ctx: Context<CloseBetting>, round_id: u64) -> Result<()> {
-        close_betting::handler(ctx, round_id)
+        instructions::close_betting::handler(ctx, round_id)
     }
 
     /// Settle a round with the winning outcome (admin only)
@@ -58,12 +57,12 @@ pub mod zeitgeist {
         winning_outcome: u8,
         winning_pool_amount: u64,
     ) -> Result<()> {
-        settle_round::handler(ctx, round_id, winning_outcome, winning_pool_amount)
+        instructions::settle_round::handler(ctx, round_id, winning_outcome, winning_pool_amount)
     }
 
     /// Claim winnings from a settled round
     pub fn claim_winnings(ctx: Context<ClaimWinnings>, round_id: u64) -> Result<()> {
-        claim_winnings::handler(ctx, round_id)
+        instructions::claim_winnings::handler(ctx, round_id)
     }
 
     /// Create a new tournament
@@ -74,7 +73,7 @@ pub mod zeitgeist {
         max_rounds: u8,
         start_time: i64,
     ) -> Result<()> {
-        create_tournament::handler(ctx, tournament_id, entry_fee, max_rounds, start_time)
+        instructions::create_tournament::handler(ctx, tournament_id, entry_fee, max_rounds, start_time)
     }
 
     /// Emergency cancel a round (admin only)
@@ -83,6 +82,6 @@ pub mod zeitgeist {
         round_id: u64,
         reason: String,
     ) -> Result<()> {
-        emergency_cancel::handler(ctx, round_id, reason)
+        instructions::emergency_cancel::handler(ctx, round_id, reason)
     }
 }

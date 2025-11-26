@@ -1,6 +1,7 @@
 // Create tournament instruction
 
 use anchor_lang::prelude::*;
+use crate::constants::{MAX_TOURNAMENT_ROUNDS, MIN_TOURNAMENT_ENTRY_FEE};
 use crate::contexts::CreateTournament;
 use crate::state::TournamentStatus;
 use crate::events::TournamentCreated;
