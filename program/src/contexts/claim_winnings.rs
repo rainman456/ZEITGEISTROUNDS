@@ -1,0 +1,43 @@
+// Claim winnings context
+
+use anchor_lang::prelude::*;
+use crate::state::{Round, Prediction, UserStats};
+use crate::constants::*;
+
+#[derive(Accounts)]
+#[instruction(round_id: u64)]
+pub struct ClaimWinnings<'info> {
+    #[account(
+        seeds = [ROUND_SEED, round_id.to_le_bytes().as_ref()],
+        bump = round.bump
+    )]
+    pub round: Account<'info, Round>,
+    
+    #[account(
+        mut,
+        seeds = [PREDICTION_SEED, round_id.to_le_bytes().as_ref(), user.key().as_ref()],
+        bump = prediction.bump,
+        constraint = prediction.user == user.key()
+    )]
+    pub prediction: Account<'info, Prediction>,
+    
+    #[account(
+        mut,
+        seeds = [USER_STATS_SEED, user.key().as_ref()],
+        bump = user_stats.bump
+    )]
+    pub user_stats: Account<'info, UserStats>,
+    
+    /// CHECK: Vault PDA holding round funds
+    #[account(
+        mut,
+        seeds = [VAULT_SEED, round_id.to_le_bytes().as_ref()],
+        bump
+    )]
+    pub vault: AccountInfo<'info>,
+    
+    #[account(mut)]
+    pub user: Signer<'info>,
+    
+    pub system_program: Program<'info, System>,
+}
