@@ -19,6 +19,7 @@ pub mod zeitgeist {
     use super::*;
 
     /// Initialize the global state (one-time setup)
+
     pub fn initialize(ctx: Context<Initialize>, platform_wallet: Pubkey) -> Result<()> {
         instructions::initialize::handler(ctx, platform_wallet)
     }
@@ -108,5 +109,14 @@ pub mod zeitgeist {
     /// Refund prediction from cancelled round
     pub fn refund_prediction(ctx: Context<RefundPrediction>, round_id: u64) -> Result<()> {
         instructions::refund_prediction::handler(ctx, round_id)
+    }
+
+    pub fn pause_program(ctx: Context<PauseProgram>) -> Result<()> {
+        instructions::pause_program::handler(ctx)
+    }
+
+
+    pub fn unpause_program(ctx: Context<UnPauseProgram>) -> Result<()> {
+        instructions::unpause_program::handler(ctx)
     }
 }
