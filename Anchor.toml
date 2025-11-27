@@ -3,16 +3,8 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-discount_platform = "24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT" 
+zeitgeist = "11111111111111111111111111111111"
 
-[programs.devnet]
-discount_platform = "24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT"
-
-[programs.testnet]
-discount_platform = "24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT"
-
-[programs.mainnet]
-discount_platform = "24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT"
 
 [registry]
 url = "https://api.apr.dev"
@@ -25,14 +17,8 @@ wallet = "~/.config/solana/id.json"
 #test = "cargo test"
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
 
-
-
 [test]
 startup_wait = 5000
 shutdown_wait = 2000
 upgradeable = false
 #upgradeable = true
-
-[[test.genesis]]
-address = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
-program = "deps/mpl_token_metadata.so"
