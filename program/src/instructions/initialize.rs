@@ -5,12 +5,14 @@ use crate::contexts::Initialize;
 use crate::events::GlobalStateInitialized;
 use crate::constants::PLATFORM_FEE_BPS;
 
-pub fn handler(ctx: Context<Initialize>) -> Result<()> {
+pub fn handler(ctx: Context<Initialize>, platform_wallet: Pubkey) -> Result<()> {
     let global_state = &mut ctx.accounts.global_state;
     let clock = Clock::get()?;
     
     // Initialize all fields explicitly
     global_state.admin = ctx.accounts.admin.key();
+    global_state.platform_wallet = platform_wallet; 
+
     global_state.platform_fee_bps = PLATFORM_FEE_BPS;
     global_state.total_rounds = 0;
     global_state.total_tournaments = 0;

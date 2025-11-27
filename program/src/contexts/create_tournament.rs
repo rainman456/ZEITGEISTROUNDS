@@ -8,11 +8,12 @@ use crate::constants::*;
 #[instruction(tournament_id: u64)]
 pub struct CreateTournament<'info> {
     #[account(
-        mut,
-        seeds = [GLOBAL_STATE_SEED],
-        bump = global_state.bump
-    )]
-    pub global_state: Account<'info, GlobalState>,
+    mut,
+    seeds = [GLOBAL_STATE_SEED],
+    bump = global_state.bump,
+    constraint = !global_state.paused @ crate::errors::SocialRouletteError::ProgramPaused  // ← ADD
+)]
+pub global_state: Account<'info, GlobalState>,
     
     #[account(
         init,

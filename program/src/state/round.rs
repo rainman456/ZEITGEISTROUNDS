@@ -100,9 +100,9 @@ impl Round {
         self.status == RoundStatus::Closed && self.is_betting_ended(current_time)
     }
     
-    pub fn is_settled(&self) -> bool {
-        self.status == RoundStatus::Settled
-    }
+   pub fn is_settled(&self) -> bool {
+    self.status == RoundStatus::Settled && self.winning_outcome != Self::UNSET_OUTCOME
+}
     
     pub fn is_cancelled(&self) -> bool {
         self.status == RoundStatus::Cancelled
@@ -121,19 +121,36 @@ impl Round {
     }
     
     pub fn set_winning_outcome(&mut self, outcome: u8, winning_pool_amount: u64) -> Result<()> {
-        self.winning_outcome = outcome;
-        self.winning_pool = winning_pool_amount;
-        self.status = RoundStatus::Settled;
-        Ok(())
-    }
+    // ✅ Validate outcome hasn't been set already
+    require!(
+        self.winning_outcome == Self::UNSET_OUTCOME,
+        crate::errors::SocialRouletteError::RoundAlreadySettled
+    );
     
-    pub fn close_betting(&mut self) -> Result<()> {
-        self.status = RoundStatus::Closed;
-        Ok(())
-    }
+    self.winning_outcome = outcome;
+    self.winning_pool = winning_pool_amount;
+    self.status = RoundStatus::Settled;
+    Ok(())
+}
     
-    pub fn cancel(&mut self) -> Result<()> {
-        self.status = RoundStatus::Cancelled;
-        Ok(())
-    }
+   pub fn close_betting(&mut self) -> Result<()> {
+    require!(
+        self.status == RoundStatus::Active,
+        crate::errors::SocialRouletteError::RoundNotActive
+    );
+    
+    self.status = RoundStatus::Closed;
+    Ok(())
+}
+    
+   pub fn cancel(&mut self) -> Result<()> {
+    // Optional: Prevent re-cancellation
+    require!(
+        self.status != RoundStatus::Cancelled,
+        crate::errors::SocialRouletteError::RoundAlreadyCancelled
+    );
+    
+    self.status = RoundStatus::Cancelled;
+    Ok(())
+}
 }

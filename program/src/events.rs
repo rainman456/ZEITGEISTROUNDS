@@ -86,3 +86,11 @@ pub struct UserStatsUpdated {
     pub total_won: u64,
     pub win_rate: u64, // Basis points (e.g., 7500 = 75%)
 }
+
+#[event]
+pub struct PredictionRefunded {
+    pub round_id: u64,
+    pub user: Pubkey,
+    pub amount: u64,
+    pub timestamp: i64,
+}

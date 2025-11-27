@@ -4,12 +4,12 @@ declare_id!("24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT");
 
 // Module declarations
 pub mod constants;
+pub mod contexts;
 pub mod errors;
 pub mod events;
+pub mod instructions;
 pub mod state;
 pub mod utils;
-pub mod contexts;
-pub mod instructions;
 
 // Re-export all contexts at crate root for Anchor macro
 pub use contexts::*;
@@ -19,8 +19,8 @@ pub mod zeitgeist {
     use super::*;
 
     /// Initialize the global state (one-time setup)
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        instructions::initialize::handler(ctx)
+    pub fn initialize(ctx: Context<Initialize>, platform_wallet: Pubkey) -> Result<()> {
+        instructions::initialize::handler(ctx, platform_wallet)
     }
 
     /// Create a new prediction round
@@ -31,10 +31,24 @@ pub mod zeitgeist {
         end_time: i64,
         num_outcomes: u8,
         description: String,
+        verification_method: state::VerificationMethod, // ← ADD
+        target_value: i64,                              // ← ADD
+        data_source: Pubkey,                            // ← ADD
+        oracle: Pubkey,                                 // ← ADD
     ) -> Result<()> {
-        instructions::create_round::handler(ctx, round_id, start_time, end_time, num_outcomes, description)
+        instructions::create_round::handler(
+            ctx,
+            round_id,
+            start_time,
+            end_time,
+            num_outcomes,
+            description,
+            verification_method, // ← ADD
+            target_value,        // ← ADD
+            data_source,         // ← ADD
+            oracle,              // ← ADD
+        )
     }
-
     /// Place a prediction on a round
     pub fn place_prediction(
         ctx: Context<PlacePrediction>,
@@ -73,7 +87,13 @@ pub mod zeitgeist {
         max_rounds: u8,
         start_time: i64,
     ) -> Result<()> {
-        instructions::create_tournament::handler(ctx, tournament_id, entry_fee, max_rounds, start_time)
+        instructions::create_tournament::handler(
+            ctx,
+            tournament_id,
+            entry_fee,
+            max_rounds,
+            start_time,
+        )
     }
 
     /// Emergency cancel a round (admin only)
@@ -83,5 +103,10 @@ pub mod zeitgeist {
         reason: String,
     ) -> Result<()> {
         instructions::emergency_cancel::handler(ctx, round_id, reason)
+    }
+
+    /// Refund prediction from cancelled round
+    pub fn refund_prediction(ctx: Context<RefundPrediction>, round_id: u64) -> Result<()> {
+        instructions::refund_prediction::handler(ctx, round_id)
     }
 }

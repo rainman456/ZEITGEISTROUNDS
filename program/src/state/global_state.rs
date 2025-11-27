@@ -7,6 +7,7 @@ use anchor_lang::prelude::*;
 pub struct GlobalState {
     /// Program admin who can update settings
     pub admin: Pubkey,
+
     
     /// Platform fee in basis points (e.g., 200 = 2%)
     pub platform_fee_bps: u16,
@@ -25,6 +26,8 @@ pub struct GlobalState {
     
     /// Bump seed for PDA derivation
     pub bump: u8,
+
+    pub platform_wallet: Pubkey,  
 }
 
 impl GlobalState {

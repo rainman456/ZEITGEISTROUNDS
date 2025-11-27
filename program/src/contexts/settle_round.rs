@@ -30,7 +30,10 @@ pub struct SettleRound<'info> {
     pub vault: AccountInfo<'info>,
     
     /// CHECK: Platform fee recipient
-    #[account(mut)]
+     #[account(
+        mut,
+        constraint = platform_wallet.key() == global_state.platform_wallet @ crate::errors::SocialRouletteError::Unauthorized  // ✅ ADD THIS
+    )]
     pub platform_wallet: AccountInfo<'info>,
     
     pub admin: Signer<'info>,

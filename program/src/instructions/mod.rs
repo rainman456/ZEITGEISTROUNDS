@@ -8,3 +8,5 @@ pub mod settle_round;
 pub mod claim_winnings;
 pub mod create_tournament;
 pub mod emergency_cancel;
+pub mod refund_prediction;  // ← ADD THIS
+

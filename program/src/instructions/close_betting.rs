@@ -11,9 +11,9 @@ pub fn handler(ctx: Context<CloseBetting>, round_id: u64) -> Result<()> {
     
     // Validate betting period has ended
     require!(
-        round.is_betting_ended(clock.unix_timestamp),
-        SocialRouletteError::BettingStillActive
-    );
+    clock.unix_timestamp >= round.betting_close_time,
+    SocialRouletteError::BettingStillActive
+);
     
     // Close betting
     round.close_betting()?;
