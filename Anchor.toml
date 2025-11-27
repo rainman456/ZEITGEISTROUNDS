@@ -3,16 +3,16 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-discount_platform = "9P3wW4XQH7DntMqfEiLqS6SNztihxfenNUSqECh3WTf3" 
+discount_platform = "24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT" 
 
 [programs.devnet]
-discount_platform = "9P3wW4XQH7DntMqfEiLqS6SNztihxfenNUSqECh3WTf3"
+discount_platform = "24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT"
 
 [programs.testnet]
-discount_platform = "9P3wW4XQH7DntMqfEiLqS6SNztihxfenNUSqECh3WTf3"
+discount_platform = "24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT"
 
 [programs.mainnet]
-discount_platform = "9P3wW4XQH7DntMqfEiLqS6SNztihxfenNUSqECh3WTf3"
+discount_platform = "24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT"
 
 [registry]
 url = "https://api.apr.dev"
