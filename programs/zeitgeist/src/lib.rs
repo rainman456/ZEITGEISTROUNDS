@@ -68,14 +68,14 @@ pub mod zeitgeist {
     }
 
     /// Settle a round with the winning outcome (admin only)
-    pub fn settle_round(
-        ctx: Context<SettleRound>,
-        round_id: u64,
-        winning_outcome: u8,
-    ) -> Result<()> {
-        instructions::settle_round::handler(ctx, round_id, winning_outcome)
-    }
-
+  /// Settle a round with the winning outcome (admin only)
+pub fn settle_round(
+    ctx: Context<SettleRound>,
+    round_id: u64,
+    winning_pool_amount: u64,  // ← Only this parameter, not winning_outcome
+) -> Result<()> {
+    instructions::settle_round::handler(ctx, round_id, winning_pool_amount)
+}
     /// Claim winnings from a settled round
     pub fn claim_winnings(ctx: Context<ClaimWinnings>, round_id: u64) -> Result<()> {
         instructions::claim_winnings::handler(ctx, round_id)

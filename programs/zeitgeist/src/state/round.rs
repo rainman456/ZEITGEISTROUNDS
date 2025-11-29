@@ -80,8 +80,8 @@ pub struct Round {
     /// Authorized oracle that can settle this round
     pub oracle: Pubkey,
 
-    #[max_len(1000)]  // Adjust based on max predictions
-pub leaderboard: Vec<(Pubkey, u64)>,
+//     #[max_len(1000)]  // Adjust based on max predictions
+// pub leaderboard: Vec<(Pubkey, u64)>,
     
 }
 

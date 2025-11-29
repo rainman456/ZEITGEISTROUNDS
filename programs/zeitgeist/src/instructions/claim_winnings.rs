@@ -39,8 +39,8 @@ pub fn handler(ctx: Context<ClaimWinnings>, round_id: u64) -> Result<()> {
         round.platform_fee_collected,
         
     )?;
-    round.leaderboard.push((ctx.accounts.user.key(), winnings));
-round.leaderboard.sort_by(|a, b| b.1.cmp(&a.1)); // Sort by winnings desc
+//     round.leaderboard.push((ctx.accounts.user.key(), winnings));
+// round.leaderboard.sort_by(|a, b| b.1.cmp(&a.1)); // Sort by winnings desc
     
     require!(winnings > 0, SocialRouletteError::NoWinnings);
     
