@@ -3,7 +3,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 use crate::contexts::PlacePrediction;
-use crate::state::UserStats;
+//use crate::state::UserStats;
 use crate::events::PredictionPlaced;
 use crate::errors::SocialRouletteError;
 use crate::constants::*;
