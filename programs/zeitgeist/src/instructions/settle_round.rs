@@ -77,16 +77,14 @@
 //     Ok(())
 // }
 
-
-
 // Settle round instruction
 
-use anchor_lang::prelude::*;
 use crate::contexts::SettleRound;
 use crate::errors::SocialRouletteError;
 use crate::events::RoundSettled;
-use crate::utils::calculate_platform_fee;
 use crate::state::VerificationMethod;
+use crate::utils::calculate_platform_fee;
+use anchor_lang::prelude::*;
 
 pub fn handler(
     ctx: Context<SettleRound>,

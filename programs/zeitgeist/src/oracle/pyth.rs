@@ -18,7 +18,11 @@ pub fn verify_pyth_price(
         .ok_or(SocialRouletteError::OraclePriceStale)?;
     
     // Convert price to comparable format (cents)
-    let current_price_cents = (price.price * 100) / (10_i64.pow(price.expo.unsigned_abs()));
+  let current_price_cents = if price.expo >= 0 {
+    (price.price * 100) * (10_i64.pow(price.expo as u32))
+} else {
+    (price.price * 100) / (10_i64.pow(price.expo.unsigned_abs()))
+};
     
     // Compare with target value
     // Outcome 0 = "Will price be above target?"

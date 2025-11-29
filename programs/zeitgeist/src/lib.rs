@@ -10,6 +10,8 @@ pub mod events;
 pub mod instructions;
 pub mod state;
 pub mod utils;
+pub mod oracle;  // Add this line
+
 
 // Re-export all contexts at crate root for Anchor macro
 pub use contexts::*;
@@ -70,9 +72,8 @@ pub mod zeitgeist {
         ctx: Context<SettleRound>,
         round_id: u64,
         winning_outcome: u8,
-        winning_pool_amount: u64,
     ) -> Result<()> {
-        instructions::settle_round::handler(ctx, round_id, winning_outcome, winning_pool_amount)
+        instructions::settle_round::handler(ctx, round_id, winning_outcome)
     }
 
     /// Claim winnings from a settled round

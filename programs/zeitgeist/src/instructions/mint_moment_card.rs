@@ -15,30 +15,72 @@ pub fn handler(ctx: Context<MintMomentCard>, round_id: u64) -> Result<()> {
     );
     
     // Determine rarity based on outcome
-    let rarity = if prediction.is_winner(round.winning_outcome) {
-        if prediction.outcome != round.winning_outcome {
-            "Legendary" // Wrong prediction but won (impossible, but for edge cases)
-        } else {
-            // Calculate if underdog win
-            let win_percentage = (round.winning_pool * 100) / round.total_pool;
-            if win_percentage < 30 {
-                "Legendary" // Underdog win
-            } else {
-                "Rare" // Normal win
-            }
-        }
+   let rarity = if prediction.is_winner(round.winning_outcome) {
+    // Calculate what % of total pool bet on winning side
+    let win_percentage = (round.winning_pool * 100) / round.total_pool;
+    
+    if win_percentage < 20 {
+        "Legendary" // Less than 20% bet on winning side
+    } else if win_percentage < 40 {
+        "Epic" // 20-40% bet on winning side
     } else {
-        "Common" // Loss
-    };
+        "Rare" // 40%+ bet on winning side (favorite won)
+    }
+} else {
+    "Common" // Wrong prediction
+};
+
+
+    let front_metadata = format!(
+    "Question: {}|Prediction: Outcome {}|Timestamp: {}|Pot: {} SOL",
+    round.question,
+    prediction.outcome,
+    prediction.timestamp,
+    round.total_pool as f64 / 1_000_000_000.0
+);
+
+let back_metadata = if prediction.is_winner(round.winning_outcome) {
+    let winnings = crate::utils::calculate_winnings(
+        prediction.amount,
+        round.winning_pool,
+        round.total_pool,
+        round.platform_fee_collected,
+    )?;
+    
+    format!(
+        "Outcome: {}|Winnings: {} SOL|Rank: {}|Rarity: {}",
+        round.winning_outcome,
+        winnings as f64 / 1_000_000_000.0,
+        "N/A", // Need to implement ranking system
+        rarity
+    )
+} else {
+    format!(
+        "Outcome: {}|Winnings: 0 SOL|Rank: N/A|Rarity: {}",
+        round.winning_outcome,
+        rarity
+    )
+};
+
+// Calculate user's rank:
+let user_rank = round.leaderboard.iter()
+    .position(|(user, _)| user == &ctx.accounts.user.key())
+    .map(|pos| pos + 1)
+    .unwrap_or(0);
+
+
+
     
     // Build metadata
     let metadata = MetadataArgs {
-        name: format!("Zeitgeist Round #{}", round_id),
-        symbol: "ZGST".to_string(),
-        uri: format!(
-            "https://api.zeitgeist.game/moments/{}/{}",
-            round_id,
-            ctx.accounts.user.key()
+        name: format!("Zeitgeist Round #{} - {}", round_id, rarity),
+    symbol: "ZGST".to_string(),
+    uri: format!(
+        "https://api.zeitgeist.game/moments/{}/{}?front={}&back={}",
+        round_id,
+        ctx.accounts.user.key(),
+        urlencoding::encode(&front_metadata),
+        urlencoding::encode(&back_metadata)
         ),
         seller_fee_basis_points: 0,
         primary_sale_happened: true,
