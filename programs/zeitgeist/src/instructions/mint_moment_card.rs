@@ -29,49 +29,61 @@ pub fn handler(ctx: Context<MintMomentCard>, round_id: u64) -> Result<()> {
         "Common"
     };
 
-// Build metadata URI (store full metadata off-chain)
-// Build metadata URI (store full metadata off-chain)
-let metadata_uri = format!(
-    "https://api.zeitgeist.game/moments/{}/{}",
-    round_id,
-    ctx.accounts.user.key()
-);
+    // Build metadata URI (store full metadata off-chain)
+    let metadata_uri = format!(
+        "https://api.zeitgeist.game/moments/{}/{}",
+        round_id,
+        ctx.accounts.user.key()
+    );
 
-// Build metadata
-let metadata = MetadataArgs {
-    name: format!("Zeitgeist Round #{}", round_id),
-    symbol: String::from("ZGST"),
-    uri: metadata_uri,
-    seller_fee_basis_points: 0,
-    primary_sale_happened: true,
-    is_mutable: false,
-    edition_nonce: None,
-    token_standard: Some(TokenStandard::NonFungible),
-    collection: Some(Collection {
-        verified: false,
-        key: ctx.accounts.collection_mint.key(),
-    }),
-    uses: None,
-    token_program_version: TokenProgramVersion::Original,
-    creators: vec![],
-};
-// Mint compressed NFT using CPI - use as_ref() to convert UncheckedAccount to AccountInfo
-MintV1CpiBuilder::new(ctx.accounts.bubblegum_program.as_ref())
-    .tree_config(ctx.accounts.tree_authority.as_ref())
-    .leaf_owner(ctx.accounts.user.to_account_info().as_ref())
-    .leaf_delegate(ctx.accounts.user.to_account_info().as_ref())
-    .merkle_tree(ctx.accounts.merkle_tree.as_ref())
-    .payer(ctx.accounts.user.to_account_info().as_ref())
-    .tree_creator_or_delegate(ctx.accounts.user.to_account_info().as_ref())
-    .log_wrapper(ctx.accounts.log_wrapper.as_ref())
-    .compression_program(ctx.accounts.compression_program.as_ref())
-    .system_program(ctx.accounts.system_program.to_account_info().as_ref())
-    .metadata(metadata)
-    .invoke()
-    .map_err(|e| {
-        msg!("Error minting cNFT: {:?}", e);
-        error!(SocialRouletteError::InvalidOracle)
-    })?;
+    // Convert keys to the format mpl-bubblegum expects
+    let collection_key = ctx.accounts.collection_mint.key();
+    
+    // Build metadata with proper types
+    let metadata = MetadataArgs {
+        name: format!("Zeitgeist Round #{}", round_id),
+        symbol: String::from("ZGST"),
+        uri: metadata_uri,
+        seller_fee_basis_points: 0,
+        primary_sale_happened: true,
+        is_mutable: false,
+        edition_nonce: None,
+        token_standard: Some(TokenStandard::NonFungible),
+        collection: Some(Collection {
+            verified: false,
+            key: collection_key,
+        }),
+        uses: None,
+        token_program_version: TokenProgramVersion::Original,
+        creators: vec![],
+    };
+
+    // Get account infos
+    let tree_config = &ctx.accounts.tree_authority.to_account_info();
+    let leaf_owner = &ctx.accounts.user.to_account_info();
+    let leaf_delegate = &ctx.accounts.user.to_account_info();
+    let merkle_tree = &ctx.accounts.merkle_tree.to_account_info();
+    let payer = &ctx.accounts.user.to_account_info();
+    let tree_creator = &ctx.accounts.user.to_account_info();
+    let log_wrapper = &ctx.accounts.log_wrapper.to_account_info();
+    let compression_program = &ctx.accounts.compression_program.to_account_info();
+    let system_program = &ctx.accounts.system_program.to_account_info();
+    let bubblegum = &ctx.accounts.bubblegum_program.to_account_info();
+
+    // Mint compressed NFT using CPI
+    MintV1CpiBuilder::new(bubblegum)
+        .tree_config(tree_config)
+        .leaf_owner(leaf_owner)
+        .leaf_delegate(leaf_delegate)
+        .merkle_tree(merkle_tree)
+        .payer(payer)
+        .tree_creator_or_delegate(tree_creator)
+        .log_wrapper(log_wrapper)
+        .compression_program(compression_program)
+        .system_program(system_program)
+        .metadata(metadata)
+        .invoke()
+        .map_err(|_| error!(SocialRouletteError::InvalidOracle))?;
     
     msg!("Minted cNFT for round {} with rarity: {}", round_id, rarity);
     
