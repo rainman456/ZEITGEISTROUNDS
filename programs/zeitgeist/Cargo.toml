@@ -16,12 +16,21 @@ no-idl = []
 no-log-ix-name = []
 idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
 
-
 [dependencies]
-anchor-lang = { version = "0.32.1", features = ["init-if-needed"] }
-anchor-spl = "0.32.1"
-pyth-sdk-solana = "0.10.1" 
-switchboard-v2 = "0.4.0"   
-mpl-bubblegum = "1.4.0"       
-spl-account-compression = "0.3.0"  
+anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
+anchor-spl = "0.30.1"
 
+# Don't pin Solana versions - let Anchor decide
+# solana-program = "=2.2.1"  ← REMOVE THIS
+
+# Use minimal oracle deps
+#pyth-solana-receiver-sdk = "0.3.0"
+
+# Skip Switchboard if it causes issues - implement manually
+switchboard-solana = "0.30.4" 
+
+# NFTs
+mpl-bubblegum = "2.1.1"
+spl-account-compression = "1.0.0"
+#pyth-sdk-solana = "0.10.6"
+#switchboard-v2 = "0.4.0"
