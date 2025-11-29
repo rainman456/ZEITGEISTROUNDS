@@ -93,4 +93,20 @@ pub enum SocialRouletteError {
 
     #[msg("No refund available")]
     NoRefund,
+
+
+    #[msg("Invalid oracle data")]
+InvalidOracle,
+
+#[msg("Oracle price data is stale")]
+OraclePriceStale,
+
+#[msg("Oracle is not ready")]
+OracleNotReady,
+
+#[msg("Unsupported verification method")]
+UnsupportedVerification,
+
+#[msg("Requires off-chain oracle (use admin settlement)")]
+RequiresOffChainOracle,
 }

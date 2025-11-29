@@ -11,4 +11,5 @@ pub mod emergency_cancel;
 pub mod refund_prediction;  // ← ADD THIS
 pub mod unpause_program;  // ← ADD THIS
 pub mod pause_program;
+pub mod mint_moment_card;
 

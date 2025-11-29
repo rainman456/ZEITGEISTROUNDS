@@ -11,6 +11,7 @@ pub mod emergency_cancel;
 pub mod refund_prediction;  // ← ADD THIS
 pub mod unpause_program;  // ← ADD THIS
 pub mod pause_program;
+pub mod mint_moment_card;
 
 
 // Re-export all contexts
@@ -25,3 +26,4 @@ pub use emergency_cancel::*;
 pub use refund_prediction::*;  // ← ADD THIS
 pub use unpause_program::*;  // ← ADD THIS
 pub use pause_program::*;
+pub use mint_moment_card::*;
