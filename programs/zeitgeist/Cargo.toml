@@ -17,8 +17,8 @@ no-log-ix-name = []
 idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
 
 [dependencies]
-anchor-lang = { version = "0.31.0", features = ["init-if-needed"] }
-anchor-spl = "0.31.0"
+anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
+anchor-spl = "0.30.1"
 
 # Don't pin Solana versions - let Anchor decide
 # solana-program = "=2.2.1"  ← REMOVE THIS
@@ -28,16 +28,16 @@ anchor-spl = "0.31.0"
 
 # Skip Switchboard if it causes issues - implement manually
 #switchboard-solana = "0.30.4" 
-proc-macro2 = "1.0.86"
+#proc-macro2 = "1.0.86"
 
 # NFTs
-mpl-bubblegum = "2.1.1"
-#mpl-bubblegum = "1.4.0"
+#mpl-bubblegum = "2.1.1"
+#solana-program = "~1.18"  
+
+mpl-bubblegum = "1.4.0"
 #mpl-bubblegum = "2.0.0"
 spl-account-compression = "1.0.0"
 #solana-program = "=2.2.1"
 #pyth-sdk-solana = "0.10.6"
 #switchboard-v2 = "0.4.0"
 #anchor-syn = "0.31.0" 
-#zeroize = "1.8.2" 
-#spl-account-compression = "0.4.0"
