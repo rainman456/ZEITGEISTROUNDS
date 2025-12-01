@@ -12,10 +12,17 @@ export interface PriceData {
 export class OracleService {
   private config: SolanaConfig;
 
-  // Pyth price feed IDs
-  private readonly PYTH_FEEDS = {
-    SOL_USD: 'H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG', // SOL/USD on devnet
-    BTC_USD: '3m1y5h2uv7EQL3KaJZehvAJa4yDNvgc5yAdL9KPMKwvk', // BTC/USD on devnet
+  // Pyth price feed IDs for Hermes API (not Solana addresses)
+  // These are the actual Pyth price feed IDs (32-byte hex strings)
+  private readonly PYTH_PRICE_FEED_IDS = {
+    SOL_USD: '0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d', // SOL/USD
+    BTC_USD: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43', // BTC/USD
+  };
+
+  // Solana devnet addresses (for on-chain verification)
+  private readonly PYTH_DEVNET_ADDRESSES = {
+    SOL_USD: 'H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG',
+    BTC_USD: '3m1y5h2uv7EQL3KaJZehvAJa4yDNvgc5yAdL9KPMKwvk',
   };
 
   constructor() {
@@ -27,18 +34,18 @@ export class OracleService {
    */
   public async fetchPythPriceHTTP(symbol: 'SOL' | 'BTC' = 'SOL'): Promise<PriceData> {
     try {
-      const feedId = symbol === 'SOL' ? this.PYTH_FEEDS.SOL_USD : this.PYTH_FEEDS.BTC_USD;
+      const feedId = symbol === 'SOL' ? this.PYTH_PRICE_FEED_IDS.SOL_USD : this.PYTH_PRICE_FEED_IDS.BTC_USD;
       
-      // Pyth Hermes API endpoint
-      const url = `https://hermes.pyth.network/api/latest_price_feeds?ids[]=${feedId}`;
+      // Correct Pyth Hermes API endpoint format
+      const url = `https://hermes.pyth.network/v2/updates/price/latest?ids[]=${feedId}`;
       
       const response = await axios.get(url);
       
-      if (!response.data || response.data.length === 0) {
+      if (!response.data || !response.data.parsed || response.data.parsed.length === 0) {
         throw new Error('No price data returned from Pyth');
       }
 
-      const priceData = response.data[0].price;
+      const priceData = response.data.parsed[0].price;
       
       // Convert to USD (Pyth returns price with exponent)
       const price = parseFloat(priceData.price) * Math.pow(10, priceData.expo);

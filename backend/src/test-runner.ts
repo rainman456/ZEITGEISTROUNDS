@@ -16,10 +16,10 @@ async function runTests() {
     { name: '1. Solana Client', fn: SolanaConfig.__test },
     { name: '2. Program Interface', fn: ProgramService.__test },
     { name: '3. PDA Service', fn: PDAService.__test },
-    { name: '4. Initialize Service', fn: InitializeService.__test },
-    { name: '5. Round Creation Service', fn: RoundService.__test },
-    { name: '6. Prediction Service', fn: PredictionService.__test },
-    { name: '7. Settlement Service', fn: SettlementService.__test },
+   { name: '4. Initialize Service', fn: InitializeService.__test },
+   { name: '5. Round Creation Service', fn: RoundService.__test },
+   { name: '6. Prediction Service', fn: PredictionService.__test },
+   { name: '7. Settlement Service', fn: SettlementService.__test },
     { name: '8. Oracle Service', fn: OracleService.__test },
   ];
 
