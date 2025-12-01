@@ -6,6 +6,10 @@ import { RoundService } from './services/round.service';
 import { PredictionService } from './services/prediction.service';
 import { SettlementService } from './services/settlement.service';
 import { OracleService } from './services/oracle.service';
+import { AdminService } from './services/admin.service';
+import { RefundService } from './services/refund.service';
+
+
 
 async function runTests() {
   console.log('='.repeat(70));
@@ -21,6 +25,8 @@ async function runTests() {
    { name: '6. Prediction Service', fn: PredictionService.__test },
    { name: '7. Settlement Service', fn: SettlementService.__test },
     { name: '8. Oracle Service', fn: OracleService.__test },
+    { name: '9. Admin Service', fn: AdminService.__test },
+      { name: '10. Refund Service', fn: RefundService.__test }, 
   ];
 
   for (const test of tests) {
