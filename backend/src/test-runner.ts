@@ -5,6 +5,7 @@ import { InitializeService } from './services/initialize.service';
 import { RoundService } from './services/round.service';
 import { PredictionService } from './services/prediction.service';
 import { SettlementService } from './services/settlement.service';
+import { OracleService } from './services/oracle.service';
 
 async function runTests() {
   console.log('='.repeat(70));
@@ -19,6 +20,7 @@ async function runTests() {
     { name: '5. Round Creation Service', fn: RoundService.__test },
     { name: '6. Prediction Service', fn: PredictionService.__test },
     { name: '7. Settlement Service', fn: SettlementService.__test },
+    { name: '8. Oracle Service', fn: OracleService.__test },
   ];
 
   for (const test of tests) {
@@ -38,10 +40,10 @@ async function runTests() {
   }
 
   console.log('\n' + '='.repeat(70));
-  console.log('✅ ALL TESTS PASSED - CORE BACKEND COMPLETE');
+  console.log('✅ ALL TESTS PASSED - BACKEND COMPLETE!');
   console.log('='.repeat(70));
-  console.log('\n🎉 You now have a fully functional prediction game backend!');
-  console.log('Next steps: Integrate oracle services (Checkpoint 6)');
+  console.log('\n🎉 Ready to run full game cycle!');
+  console.log('Run: npm run game-cycle');
 }
 
 // Handle errors gracefully
