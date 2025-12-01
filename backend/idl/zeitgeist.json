@@ -1,0 +1,2216 @@
+{
+  "address": "4mtjVwJ3h3zEffFbgZaNHShFywhaepAXyAkT2uEHYQuF",
+  "metadata": {
+    "name": "zeitgeist",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Game"
+  },
+  "instructions": [
+    {
+      "name": "claim_winnings",
+      "docs": [
+        "Claim winnings from a settled round"
+      ],
+      "discriminator": [
+        161,
+        215,
+        24,
+        59,
+        14,
+        236,
+        242,
+        221
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "prediction",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  101,
+                  100,
+                  105,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_stats",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "close_betting",
+      "docs": [
+        "Close betting for a round (after end_time)"
+      ],
+      "discriminator": [
+        183,
+        243,
+        76,
+        1,
+        242,
+        130,
+        138,
+        58
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "round_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_round",
+      "docs": [
+        "Create a new prediction round"
+      ],
+      "discriminator": [
+        229,
+        218,
+        236,
+        169,
+        231,
+        80,
+        134,
+        112
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round_id",
+          "type": "u64"
+        },
+        {
+          "name": "start_time",
+          "type": "i64"
+        },
+        {
+          "name": "end_time",
+          "type": "i64"
+        },
+        {
+          "name": "num_outcomes",
+          "type": "u8"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "verification_method",
+          "type": {
+            "defined": {
+              "name": "VerificationMethod"
+            }
+          }
+        },
+        {
+          "name": "target_value",
+          "type": "i64"
+        },
+        {
+          "name": "data_source",
+          "type": "pubkey"
+        },
+        {
+          "name": "oracle",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "create_tournament",
+      "docs": [
+        "Create a new tournament"
+      ],
+      "discriminator": [
+        158,
+        137,
+        233,
+        231,
+        73,
+        132,
+        191,
+        68
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "tournament",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  111,
+                  117,
+                  114,
+                  110,
+                  97,
+                  109,
+                  101,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "tournament_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "tournament_id",
+          "type": "u64"
+        },
+        {
+          "name": "entry_fee",
+          "type": "u64"
+        },
+        {
+          "name": "max_rounds",
+          "type": "u8"
+        },
+        {
+          "name": "start_time",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "emergency_cancel",
+      "docs": [
+        "Emergency cancel a round (admin only)"
+      ],
+      "discriminator": [
+        92,
+        73,
+        255,
+        17,
+        197,
+        5,
+        46,
+        75
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "round_id",
+          "type": "u64"
+        },
+        {
+          "name": "reason",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "initialize",
+      "docs": [
+        "Initialize the global state (one-time setup)"
+      ],
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "platform_wallet",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "pause_program",
+      "discriminator": [
+        91,
+        86,
+        253,
+        175,
+        66,
+        236,
+        172,
+        124
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "place_prediction",
+      "docs": [
+        "Place a prediction on a round"
+      ],
+      "discriminator": [
+        79,
+        46,
+        195,
+        197,
+        50,
+        91,
+        88,
+        229
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "prediction",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  101,
+                  100,
+                  105,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_stats",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round_id",
+          "type": "u64"
+        },
+        {
+          "name": "outcome",
+          "type": "u8"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "refund_prediction",
+      "docs": [
+        "Refund prediction from cancelled round"
+      ],
+      "discriminator": [
+        199,
+        13,
+        143,
+        102,
+        106,
+        137,
+        154,
+        232
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "prediction",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  101,
+                  100,
+                  105,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "settle_round",
+      "docs": [
+        "Settle a round with the winning outcome (admin only)",
+        "Settle a round with the winning outcome (admin only)"
+      ],
+      "discriminator": [
+        40,
+        101,
+        18,
+        1,
+        31,
+        129,
+        52,
+        77
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "platform_wallet",
+          "writable": true
+        },
+        {
+          "name": "oracle_data",
+          "docs": [
+            "This account is validated inside the instruction based on verification_method"
+          ]
+        },
+        {
+          "name": "oracle",
+          "signer": true
+        },
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round_id",
+          "type": "u64"
+        },
+        {
+          "name": "winning_pool_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "unpause_program",
+      "discriminator": [
+        43,
+        162,
+        233,
+        92,
+        254,
+        62,
+        69,
+        58
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "GlobalState",
+      "discriminator": [
+        163,
+        46,
+        74,
+        168,
+        216,
+        123,
+        133,
+        98
+      ]
+    },
+    {
+      "name": "Prediction",
+      "discriminator": [
+        98,
+        127,
+        141,
+        187,
+        218,
+        33,
+        8,
+        14
+      ]
+    },
+    {
+      "name": "Round",
+      "discriminator": [
+        87,
+        127,
+        165,
+        51,
+        73,
+        78,
+        116,
+        174
+      ]
+    },
+    {
+      "name": "Tournament",
+      "discriminator": [
+        175,
+        139,
+        119,
+        242,
+        115,
+        194,
+        57,
+        92
+      ]
+    },
+    {
+      "name": "UserStats",
+      "discriminator": [
+        176,
+        223,
+        136,
+        27,
+        122,
+        79,
+        32,
+        227
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "BettingClosed",
+      "discriminator": [
+        23,
+        184,
+        157,
+        244,
+        65,
+        44,
+        152,
+        70
+      ]
+    },
+    {
+      "name": "GlobalStateInitialized",
+      "discriminator": [
+        246,
+        51,
+        83,
+        38,
+        11,
+        74,
+        6,
+        139
+      ]
+    },
+    {
+      "name": "PredictionPlaced",
+      "discriminator": [
+        230,
+        40,
+        242,
+        26,
+        50,
+        92,
+        158,
+        221
+      ]
+    },
+    {
+      "name": "PredictionRefunded",
+      "discriminator": [
+        161,
+        252,
+        152,
+        42,
+        202,
+        252,
+        251,
+        42
+      ]
+    },
+    {
+      "name": "RoundCancelled",
+      "discriminator": [
+        238,
+        141,
+        105,
+        175,
+        182,
+        158,
+        15,
+        7
+      ]
+    },
+    {
+      "name": "RoundCreated",
+      "discriminator": [
+        16,
+        19,
+        68,
+        117,
+        87,
+        198,
+        7,
+        124
+      ]
+    },
+    {
+      "name": "RoundSettled",
+      "discriminator": [
+        249,
+        225,
+        66,
+        54,
+        157,
+        200,
+        234,
+        222
+      ]
+    },
+    {
+      "name": "TournamentCreated",
+      "discriminator": [
+        102,
+        32,
+        240,
+        45,
+        52,
+        64,
+        97,
+        0
+      ]
+    },
+    {
+      "name": "TournamentEnded",
+      "discriminator": [
+        46,
+        250,
+        165,
+        48,
+        249,
+        96,
+        51,
+        134
+      ]
+    },
+    {
+      "name": "UserStatsUpdated",
+      "discriminator": [
+        196,
+        36,
+        42,
+        2,
+        173,
+        74,
+        110,
+        5
+      ]
+    },
+    {
+      "name": "WinningsClaimed",
+      "discriminator": [
+        187,
+        184,
+        29,
+        196,
+        54,
+        117,
+        70,
+        150
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "BettingNotStarted",
+      "msg": "Betting period has not started yet"
+    },
+    {
+      "code": 6001,
+      "name": "BettingEnded",
+      "msg": "Betting period has already ended"
+    },
+    {
+      "code": 6002,
+      "name": "BettingStillActive",
+      "msg": "Betting period is still active"
+    },
+    {
+      "code": 6003,
+      "name": "RoundNotSettled",
+      "msg": "Round has not been settled yet"
+    },
+    {
+      "code": 6004,
+      "name": "RoundAlreadySettled",
+      "msg": "Round has already been settled"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidPredictionAmount",
+      "msg": "Invalid prediction amount (below minimum or above maximum)"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidOutcome",
+      "msg": "Invalid outcome index"
+    },
+    {
+      "code": 6007,
+      "name": "AlreadyPredicted",
+      "msg": "User has already placed a prediction in this round"
+    },
+    {
+      "code": 6008,
+      "name": "NoWinnings",
+      "msg": "No winnings to claim"
+    },
+    {
+      "code": 6009,
+      "name": "AlreadyClaimed",
+      "msg": "Winnings already claimed"
+    },
+    {
+      "code": 6010,
+      "name": "Unauthorized",
+      "msg": "Unauthorized: only admin can perform this action"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidBettingDuration",
+      "msg": "Invalid betting duration (too short or too long)"
+    },
+    {
+      "code": 6012,
+      "name": "MaxPredictionsReached",
+      "msg": "Maximum predictions reached for this round"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidOutcomeCount",
+      "msg": "Invalid number of outcomes (must be between 2 and MAX_OUTCOMES)"
+    },
+    {
+      "code": 6014,
+      "name": "SettlementTimeoutNotPassed",
+      "msg": "Settlement timeout has not passed yet"
+    },
+    {
+      "code": 6015,
+      "name": "CannotCancelActiveRound",
+      "msg": "Cannot cancel round after betting has started"
+    },
+    {
+      "code": 6016,
+      "name": "ArithmeticOverflow",
+      "msg": "Arithmetic overflow occurred"
+    },
+    {
+      "code": 6017,
+      "name": "ArithmeticUnderflow",
+      "msg": "Arithmetic underflow occurred"
+    },
+    {
+      "code": 6018,
+      "name": "TournamentAlreadyStarted",
+      "msg": "Tournament has already started"
+    },
+    {
+      "code": 6019,
+      "name": "TournamentNotStarted",
+      "msg": "Tournament has not started yet"
+    },
+    {
+      "code": 6020,
+      "name": "TournamentEnded",
+      "msg": "Tournament has ended"
+    },
+    {
+      "code": 6021,
+      "name": "InvalidEntryFee",
+      "msg": "Invalid tournament entry fee"
+    },
+    {
+      "code": 6022,
+      "name": "MaxTournamentRoundsReached",
+      "msg": "Maximum tournament rounds reached"
+    },
+    {
+      "code": 6023,
+      "name": "InvalidTournamentRound",
+      "msg": "Round does not belong to this tournament"
+    },
+    {
+      "code": 6024,
+      "name": "ProgramPaused",
+      "msg": "Program is currently paused"
+    },
+    {
+      "code": 6025,
+      "name": "RoundNotActive",
+      "msg": "Round is not in Active status"
+    },
+    {
+      "code": 6026,
+      "name": "InsufficientVaultBalance",
+      "msg": "Insufficient funds in vault"
+    },
+    {
+      "code": 6027,
+      "name": "RoundAlreadyCancelled",
+      "msg": "Round is already cancelled"
+    },
+    {
+      "code": 6028,
+      "name": "RoundNotCancelled",
+      "msg": "Round is not cancelled"
+    },
+    {
+      "code": 6029,
+      "name": "NoRefund",
+      "msg": "No refund available"
+    },
+    {
+      "code": 6030,
+      "name": "InvalidOracle",
+      "msg": "Invalid oracle data"
+    },
+    {
+      "code": 6031,
+      "name": "OraclePriceStale",
+      "msg": "Oracle price data is stale"
+    },
+    {
+      "code": 6032,
+      "name": "OracleNotReady",
+      "msg": "Oracle is not ready"
+    },
+    {
+      "code": 6033,
+      "name": "UnsupportedVerification",
+      "msg": "Unsupported verification method"
+    },
+    {
+      "code": 6034,
+      "name": "RequiresOffChainOracle",
+      "msg": "Requires off-chain oracle (use admin settlement)"
+    }
+  ],
+  "types": [
+    {
+      "name": "BettingClosed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "total_pool",
+            "type": "u64"
+          },
+          {
+            "name": "total_predictions",
+            "type": "u32"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GlobalState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "docs": [
+              "Program admin who can update settings"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "platform_fee_bps",
+            "docs": [
+              "Platform fee in basis points (e.g., 200 = 2%)"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "total_rounds",
+            "docs": [
+              "Total number of rounds created"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "total_tournaments",
+            "docs": [
+              "Total number of tournaments created"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "total_volume",
+            "docs": [
+              "Total volume wagered across all rounds (in lamports)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "paused",
+            "docs": [
+              "Whether the program is paused"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA derivation"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "platform_wallet",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GlobalStateInitialized",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "platform_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Prediction",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "docs": [
+              "Round this prediction belongs to"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "user",
+            "docs": [
+              "User who made the prediction"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "docs": [
+              "Amount wagered (lamports)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "outcome",
+            "docs": [
+              "Predicted outcome (0-based index)"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "timestamp",
+            "docs": [
+              "Timestamp when prediction was placed"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "claimed",
+            "docs": [
+              "Whether winnings have been claimed"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA derivation"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PredictionPlaced",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PredictionRefunded",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Round",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "docs": [
+              "Unique round ID"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "docs": [
+              "Creator of the round"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "start_time",
+            "docs": [
+              "Betting start time (Unix timestamp)"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "end_time",
+            "docs": [
+              "Betting end time (Unix timestamp)"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "total_pool",
+            "docs": [
+              "Total amount in the prize pool (lamports)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "total_predictions",
+            "docs": [
+              "Number of predictions placed"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "platform_fee_collected",
+            "docs": [
+              "Platform fee collected (lamports)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "num_outcomes",
+            "docs": [
+              "Number of possible outcomes (2-10)"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "winning_outcome",
+            "docs": [
+              "Winning outcome index (0-based, 255 = not set)"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "tournament",
+            "docs": [
+              "Optional tournament this round belongs to"
+            ],
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "winning_pool",
+            "docs": [
+              "Total amount bet on the winning outcome"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "docs": [
+              "Current status of the round"
+            ],
+            "type": {
+              "defined": {
+                "name": "RoundStatus"
+              }
+            }
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA derivation"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "betting_close_time",
+            "docs": [
+              "Betting window closes after this time (start_time + 10 seconds)"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "question",
+            "type": "string"
+          },
+          {
+            "name": "verification_method",
+            "type": {
+              "defined": {
+                "name": "VerificationMethod"
+              }
+            }
+          },
+          {
+            "name": "target_value",
+            "docs": [
+              "Target value for comparison (e.g., price in cents: 15000 = $150.00)"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "data_source",
+            "docs": [
+              "Data source address (e.g., Pyth price feed pubkey)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle",
+            "docs": [
+              "Authorized oracle that can settle this round"
+            ],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundCancelled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "reason",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "start_time",
+            "type": "i64"
+          },
+          {
+            "name": "end_time",
+            "type": "i64"
+          },
+          {
+            "name": "num_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundSettled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "winning_outcome",
+            "type": "u8"
+          },
+          {
+            "name": "total_pool",
+            "type": "u64"
+          },
+          {
+            "name": "winning_pool",
+            "type": "u64"
+          },
+          {
+            "name": "platform_fee",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Closed"
+          },
+          {
+            "name": "Settled"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tournament",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tournament_id",
+            "docs": [
+              "Unique tournament ID"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "docs": [
+              "Creator of the tournament"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "winner",
+            "docs": [
+              "Optional winner (set when tournament completes)"
+            ],
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "entry_fee",
+            "docs": [
+              "Entry fee per participant (lamports)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "prize_pool",
+            "docs": [
+              "Total prize pool accumulated (lamports)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "start_time",
+            "docs": [
+              "Start time (Unix timestamp)"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "max_rounds",
+            "docs": [
+              "Maximum number of rounds in tournament"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "current_round",
+            "docs": [
+              "Current round number (0-based)"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "participant_count",
+            "docs": [
+              "Number of participants"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "docs": [
+              "Current status"
+            ],
+            "type": {
+              "defined": {
+                "name": "TournamentStatus"
+              }
+            }
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA derivation"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TournamentCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tournament_id",
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "entry_fee",
+            "type": "u64"
+          },
+          {
+            "name": "max_rounds",
+            "type": "u8"
+          },
+          {
+            "name": "start_time",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TournamentEnded",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tournament_id",
+            "type": "u64"
+          },
+          {
+            "name": "winner",
+            "type": "pubkey"
+          },
+          {
+            "name": "total_prize_pool",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TournamentStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pending"
+          },
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Completed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserStats",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "docs": [
+              "User's public key"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "total_predictions",
+            "docs": [
+              "Total number of predictions made"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "total_wins",
+            "docs": [
+              "Total number of winning predictions"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "total_wagered",
+            "docs": [
+              "Total amount wagered (lamports)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "total_won",
+            "docs": [
+              "Total amount won (lamports)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "net_profit",
+            "docs": [
+              "Net profit/loss (lamports, can be negative)"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA derivation"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserStatsUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "total_predictions",
+            "type": "u64"
+          },
+          {
+            "name": "total_wagered",
+            "type": "u64"
+          },
+          {
+            "name": "total_won",
+            "type": "u64"
+          },
+          {
+            "name": "win_rate",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VerificationMethod",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "PythPrice"
+          },
+          {
+            "name": "OnChainData"
+          },
+          {
+            "name": "TwitterAPI"
+          },
+          {
+            "name": "SwitchboardVRF"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WinningsClaimed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}

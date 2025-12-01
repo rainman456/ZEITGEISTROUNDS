@@ -28,21 +28,34 @@ pub fn handler(ctx: Context<RefundPrediction>, round_id: u64) -> Result<()> {
     require!(refund_amount > 0, SocialRouletteError::NoRefund);
     
     // 3. Validate vault has sufficient funds
-    let vault_lamports = ctx.accounts.vault.lamports();
+   // let vault_lamports = ctx.accounts.vault.lamports();
+   // 4. Transfer refund from vault to user using CPI
     require!(
-        vault_lamports >= refund_amount,
+        ctx.accounts.vault.lamports() >= refund_amount,
         SocialRouletteError::InsufficientVaultBalance
     );
     
-    // 4. Transfer refund from vault to user
-    **ctx.accounts.vault.try_borrow_mut_lamports()? = vault_lamports
-        .checked_sub(refund_amount)
-        .ok_or(SocialRouletteError::ArithmeticUnderflow)?;
-    
-    **ctx.accounts.user.try_borrow_mut_lamports()? = ctx.accounts.user.lamports()
-        .checked_add(refund_amount)
-        .ok_or(SocialRouletteError::ArithmeticOverflow)?;
-    
+    // Create PDA signer seeds for vault
+    let round_id_bytes = round_id.to_le_bytes();
+    let vault_seeds = &[
+        crate::constants::VAULT_SEED,
+        round_id_bytes.as_ref(),
+        &[ctx.bumps.vault],
+    ];
+    let vault_signer = &[&vault_seeds[..]];
+
+    // CPI to System Program
+    anchor_lang::system_program::transfer(
+        CpiContext::new_with_signer(
+            ctx.accounts.system_program.to_account_info(),
+            anchor_lang::system_program::Transfer {
+                from: ctx.accounts.vault.to_account_info(),
+                to: ctx.accounts.user.to_account_info(),
+            },
+            vault_signer,
+        ),
+        refund_amount,
+    )?;
     // 5. Mark prediction as refunded (using claimed flag)
     prediction.mark_claimed()?;
     

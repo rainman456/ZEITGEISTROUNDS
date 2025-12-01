@@ -2,15 +2,19 @@
 resolution = true
 skip-lint = false
 
-[programs.localnet]
-zeitgeist = "24nBY5NPLcDBLzxDR3Av2NJpxsRRfDGv4KwZ9KB7vbpT"
+#[programs.localnet]
+#zeitgeist = "4mtjVwJ3h3zEffFbgZaNHShFywhaepAXyAkT2uEHYQuF"
+
+
+[programs.devnet]
+zeitgeist = "4mtjVwJ3h3zEffFbgZaNHShFywhaepAXyAkT2uEHYQuF"
 
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

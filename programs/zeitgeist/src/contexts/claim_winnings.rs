@@ -35,7 +35,7 @@ pub struct ClaimWinnings<'info> {
         seeds = [VAULT_SEED, round_id.to_le_bytes().as_ref()],
         bump
     )]
-    pub vault: AccountInfo<'info>,
+    pub vault: SystemAccount<'info>,
     
     #[account(mut)]
     pub user: Signer<'info>,

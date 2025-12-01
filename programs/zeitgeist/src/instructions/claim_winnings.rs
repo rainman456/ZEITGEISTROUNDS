@@ -45,19 +45,33 @@ pub fn handler(ctx: Context<ClaimWinnings>, round_id: u64) -> Result<()> {
     require!(winnings > 0, SocialRouletteError::NoWinnings);
     
     // Transfer winnings from vault to user
-    let vault_lamports = ctx.accounts.vault.lamports();
+    // Transfer winnings from vault to user using CPI
     require!(
-        vault_lamports >= winnings,
-        SocialRouletteError::ArithmeticUnderflow
+        ctx.accounts.vault.lamports() >= winnings,
+        SocialRouletteError::InsufficientVaultBalance
     );
     
-    **ctx.accounts.vault.try_borrow_mut_lamports()? = vault_lamports
-        .checked_sub(winnings)
-        .ok_or(SocialRouletteError::ArithmeticUnderflow)?;
-    
-    **ctx.accounts.user.try_borrow_mut_lamports()? = ctx.accounts.user.lamports()
-        .checked_add(winnings)
-        .ok_or(SocialRouletteError::ArithmeticOverflow)?;
+    // Create PDA signer seeds for vault
+    let round_id_bytes = round_id.to_le_bytes();
+    let vault_seeds = &[
+        crate::constants::VAULT_SEED,
+        round_id_bytes.as_ref(),
+        &[ctx.bumps.vault],
+    ];
+    let vault_signer = &[&vault_seeds[..]];
+
+    // CPI to System Program to transfer from vault to user
+    anchor_lang::system_program::transfer(
+        CpiContext::new_with_signer(
+            ctx.accounts.system_program.to_account_info(),
+            anchor_lang::system_program::Transfer {
+                from: ctx.accounts.vault.to_account_info(),
+                to: ctx.accounts.user.to_account_info(),
+            },
+            vault_signer,
+        ),
+        winnings,
+    )?;
     
     // Mark prediction as claimed
     prediction.mark_claimed()?;
