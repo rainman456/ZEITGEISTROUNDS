@@ -107,7 +107,7 @@ export class NFTService {
     console.log(`  Space required: ${space} bytes`);
     console.log(`  Rent: ${lamports / LAMPORTS_PER_SOL} SOL`);
 
-    // Only allocate the tree - Bubblegum will initialize tree authority on first mint
+    // Step 1: Allocate tree account
     const allocTreeIx = await createAllocTreeIx(
       this.config.connection,
       merkleTree,
@@ -116,7 +116,28 @@ export class NFTService {
       0
     );
 
-    const tx = new Transaction().add(allocTreeIx);
+    // Step 2: Initialize tree via Bubblegum's create_tree instruction
+    // This properly initializes the tree_authority PDA
+    const createTreeIx = {
+      keys: [
+        { pubkey: treeAuthorityPDA, isSigner: false, isWritable: true },
+        { pubkey: merkleTree, isSigner: false, isWritable: true },
+        { pubkey: this.config.payerKeypair.publicKey, isSigner: true, isWritable: true },
+        { pubkey: this.config.payerKeypair.publicKey, isSigner: false, isWritable: false }, // tree creator
+        { pubkey: this.NOOP_PROGRAM_ID, isSigner: false, isWritable: false },
+        { pubkey: this.COMPRESSION_PROGRAM_ID, isSigner: false, isWritable: false },
+        { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+      ],
+      programId: this.BUBBLEGUM_PROGRAM_ID,
+      data: Buffer.from([
+        165, 83, 136, 142, 89, 202, 47, 220, // create_tree discriminator
+        ...new Uint8Array(new Uint32Array([maxDepth]).buffer),
+        ...new Uint8Array(new Uint32Array([maxBufferSize]).buffer),
+        0, // public tree
+      ]),
+    };
+
+    const tx = new Transaction().add(allocTreeIx, createTreeIx);
     tx.feePayer = this.config.payerKeypair.publicKey;
     tx.recentBlockhash = (await this.config.connection.getLatestBlockhash()).blockhash;
 
@@ -127,7 +148,7 @@ export class NFTService {
       { commitment: 'confirmed' }
     );
 
-    console.log('✅ Merkle tree allocated (authority will init on first mint)!');
+    console.log('✅ Merkle tree allocated and tree authority initialized!');
     console.log(`📝 Signature: ${signature}`);
     console.log(`🔗 Explorer: https://explorer.solana.com/tx/${signature}?cluster=devnet`);
 
