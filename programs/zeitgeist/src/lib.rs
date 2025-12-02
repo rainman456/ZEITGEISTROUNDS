@@ -120,4 +120,8 @@ pub fn settle_round(
     pub fn unpause_program(ctx: Context<UnPauseProgram>) -> Result<()> {
         instructions::unpause_program::handler(ctx)
     }
+
+     pub fn mint_moment_card(ctx: Context<MintMomentCard>, round_id: u64) -> Result<()> {
+        instructions::mint_moment_card::handler(ctx, round_id)
+    }
 }

@@ -11,6 +11,13 @@ pub fn handler(ctx: Context<MintMomentCard>, round_id: u64) -> Result<()> {
     let prediction = &ctx.accounts.prediction;
     
     require!(round.is_settled(), SocialRouletteError::RoundNotSettled);
+
+     let tree_authority_info = &ctx.accounts.tree_authority;
+    if tree_authority_info.data_is_empty() {
+        // Tree authority not initialized - this is expected on first use
+        // Bubblegum's mint_v1 will handle this automatically
+        msg!("Tree authority will be initialized during mint");
+    }
     
     let rarity = if prediction.is_winner(round.winning_outcome) {
         let win_percentage = (round.winning_pool * 100) / round.total_pool;

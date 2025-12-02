@@ -1,4 +1,3 @@
-
 use anchor_lang::prelude::*;
 use crate::state::{Round, Prediction};
 use crate::constants::*;
@@ -19,20 +18,23 @@ pub struct MintMomentCard<'info> {
     )]
     pub prediction: Account<'info, Prediction>,
     
-    /// CHECK: Merkle tree account
+    /// CHECK: Merkle tree account - must be mutable for Bubblegum
     #[account(mut)]
     pub merkle_tree: UncheckedAccount<'info>,
     
-    /// CHECK: Tree authority PDA
+    /// CHECK: Tree authority PDA - must be mutable for Bubblegum
+    #[account(mut)]  // ← ADD THIS
     pub tree_authority: UncheckedAccount<'info>,
     
     /// CHECK: Collection mint
     pub collection_mint: UncheckedAccount<'info>,
     
-    /// CHECK: Collection metadata
+    /// CHECK: Collection metadata - must be mutable for Bubblegum
+    #[account(mut)]  // ← ADD THIS
     pub collection_metadata: UncheckedAccount<'info>,
     
-    /// CHECK: Collection master edition
+    /// CHECK: Collection master edition - must be mutable for Bubblegum
+    #[account(mut)]  // ← ADD THIS
     pub collection_edition: UncheckedAccount<'info>,
     
     #[account(mut)]

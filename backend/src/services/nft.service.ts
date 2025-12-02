@@ -18,6 +18,9 @@ import {
   createAllocTreeIx,
 } from '@solana/spl-account-compression';
 
+
+
+
 export interface MomentCardMetadata {
   roundId: number;
   question: string;
@@ -77,75 +80,69 @@ export class NFTService {
    * Initialize a merkle tree for compressed NFTs (one-time setup)
    */
   public async setupMerkleTree(): Promise<TreeSetup> {
-    try {
-      console.log('\n🌳 Setting up Merkle Tree for cNFTs...');
+  try {
+    console.log('\n🌳 Setting up Merkle Tree for cNFTs...');
 
-      // Generate tree keypair
-      this.merkleTreeKeypair = Keypair.generate();
-      const merkleTree = this.merkleTreeKeypair.publicKey;
+    this.merkleTreeKeypair = Keypair.generate();
+    const merkleTree = this.merkleTreeKeypair.publicKey;
 
-      // Tree configuration (optimized for devnet)
-      const maxDepth = 14; // 2^14 = 16,384 leaves
-      const maxBufferSize = 64;
+    const maxDepth = 14;
+    const maxBufferSize = 64;
 
-      console.log(`  Tree Address: ${merkleTree.toBase58()}`);
-      console.log(`  Max Depth: ${maxDepth} (capacity: ${2 ** maxDepth} NFTs)`);
-      console.log(`  Max Buffer Size: ${maxBufferSize}`);
+    console.log(`  Tree Address: ${merkleTree.toBase58()}`);
+    console.log(`  Max Depth: ${maxDepth} (capacity: ${2 ** maxDepth} NFTs)`);
+    console.log(`  Max Buffer Size: ${maxBufferSize}`);
 
-      // Derive tree authority PDA
-      const [treeAuthorityPDA] = PublicKey.findProgramAddressSync(
-        [merkleTree.toBuffer()],
-        this.BUBBLEGUM_PROGRAM_ID
-      );
-      this.treeAuthority = treeAuthorityPDA;
+    const [treeAuthorityPDA] = PublicKey.findProgramAddressSync(
+      [merkleTree.toBuffer()],
+      this.BUBBLEGUM_PROGRAM_ID
+    );
+    this.treeAuthority = treeAuthorityPDA;
 
-      console.log(`  Tree Authority: ${treeAuthorityPDA.toBase58()}`);
+    console.log(`  Tree Authority: ${treeAuthorityPDA.toBase58()}`);
 
-      // Calculate space for tree account
-      const space = getConcurrentMerkleTreeAccountSize(maxDepth, maxBufferSize);
-      const lamports = await this.config.connection.getMinimumBalanceForRentExemption(space);
+    const space = getConcurrentMerkleTreeAccountSize(maxDepth, maxBufferSize);
+    const lamports = await this.config.connection.getMinimumBalanceForRentExemption(space);
 
-      console.log(`  Space required: ${space} bytes`);
-      console.log(`  Rent: ${lamports / LAMPORTS_PER_SOL} SOL`);
+    console.log(`  Space required: ${space} bytes`);
+    console.log(`  Rent: ${lamports / LAMPORTS_PER_SOL} SOL`);
 
-      // Create allocate tree instruction
-      const allocTreeIx = await createAllocTreeIx(
-        this.config.connection,
-        merkleTree,
-        this.config.payerKeypair.publicKey,
-        { maxDepth, maxBufferSize },
-        0 // canopyDepth
-      );
+    // Only allocate the tree - Bubblegum will initialize tree authority on first mint
+    const allocTreeIx = await createAllocTreeIx(
+      this.config.connection,
+      merkleTree,
+      this.config.payerKeypair.publicKey,
+      { maxDepth, maxBufferSize },
+      0
+    );
 
-      // Build transaction
-      const tx = new Transaction().add(allocTreeIx);
-      tx.feePayer = this.config.payerKeypair.publicKey;
-      tx.recentBlockhash = (await this.config.connection.getLatestBlockhash()).blockhash;
+    const tx = new Transaction().add(allocTreeIx);
+    tx.feePayer = this.config.payerKeypair.publicKey;
+    tx.recentBlockhash = (await this.config.connection.getLatestBlockhash()).blockhash;
 
-      // Sign and send
-      const signature = await sendAndConfirmTransaction(
-        this.config.connection,
-        tx,
-        [this.config.payerKeypair, this.merkleTreeKeypair],
-        { commitment: 'confirmed' }
-      );
+    const signature = await sendAndConfirmTransaction(
+      this.config.connection,
+      tx,
+      [this.config.payerKeypair, this.merkleTreeKeypair],
+      { commitment: 'confirmed' }
+    );
 
-      console.log('✅ Merkle tree created!');
-      console.log(`📝 Signature: ${signature}`);
-      console.log(`🔗 Explorer: https://explorer.solana.com/tx/${signature}?cluster=devnet`);
+    console.log('✅ Merkle tree allocated (authority will init on first mint)!');
+    console.log(`📝 Signature: ${signature}`);
+    console.log(`🔗 Explorer: https://explorer.solana.com/tx/${signature}?cluster=devnet`);
 
-      return {
-        merkleTree,
-        treeAuthority: treeAuthorityPDA,
-        maxDepth,
-        maxBufferSize,
-      };
+    return {
+      merkleTree,
+      treeAuthority: treeAuthorityPDA,
+      maxDepth,
+      maxBufferSize,
+    };
 
-    } catch (error) {
-      console.error('❌ Failed to setup merkle tree:', error);
-      throw error;
-    }
+  } catch (error) {
+    console.error('❌ Failed to setup merkle tree:', error);
+    throw error;
   }
+}
 
   /**
    * Calculate rarity based on winning percentage

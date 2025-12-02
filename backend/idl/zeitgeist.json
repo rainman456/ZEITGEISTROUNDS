@@ -587,6 +587,115 @@
       ]
     },
     {
+      "name": "mint_moment_card",
+      "discriminator": [
+        70,
+        173,
+        28,
+        175,
+        21,
+        222,
+        212,
+        141
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "prediction",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  101,
+                  100,
+                  105,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "round_id"
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "merkle_tree",
+          "writable": true
+        },
+        {
+          "name": "tree_authority",
+          "writable": true
+        },
+        {
+          "name": "collection_mint"
+        },
+        {
+          "name": "collection_metadata",
+          "writable": true
+        },
+        {
+          "name": "collection_edition",
+          "writable": true
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "bubblegum_program"
+        },
+        {
+          "name": "compression_program"
+        },
+        {
+          "name": "log_wrapper"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "pause_program",
       "discriminator": [
         91,
