@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-   "test": "ts-node src/test-runner.ts",
+    "test": "ts-node src/test-runner.ts",
     "test:watch": "nodemon --exec ts-node src/test-runner.ts",
     "keygen": "ts-node src/utils/keypair-generator.ts",
     "airdrop": "ts-node src/utils/airdrop.ts",
-     "create-round": "ts-node src/scripts/create-test-round.ts",
-     "place-bet": "ts-node src/scripts/place-test-prediction.ts",
-     "game-cycle": "ts-node src/scripts/full-game-cycle.ts",
+    "create-round": "ts-node src/scripts/create-test-round.ts",
+    "place-bet": "ts-node src/scripts/place-test-prediction.ts",
+    "game-cycle": "ts-node src/scripts/full-game-cycle.ts",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
@@ -21,6 +21,9 @@
   "type": "commonjs",
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",
+    "@metaplex-foundation/mpl-bubblegum": "^5.0.2",
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
+    "@solana/spl-account-compression": "^0.2.1",
     "@solana/spl-token": "^0.4.14",
     "@solana/web3.js": "^1.98.4",
     "axios": "^1.13.2",

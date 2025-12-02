@@ -8,6 +8,7 @@ import { SettlementService } from './services/settlement.service';
 import { OracleService } from './services/oracle.service';
 import { AdminService } from './services/admin.service';
 import { RefundService } from './services/refund.service';
+import { NFTService } from './services/nft.service';
 
 
 
@@ -27,6 +28,7 @@ async function runTests() {
     { name: '8. Oracle Service', fn: OracleService.__test },
     { name: '9. Admin Service', fn: AdminService.__test },
       { name: '10. Refund Service', fn: RefundService.__test }, 
+      { name: '11. NFT Service', fn: NFTService.__test },
   ];
 
   for (const test of tests) {
