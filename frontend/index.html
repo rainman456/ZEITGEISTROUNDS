@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zeitgeist Rounds | Solana Prediction Markets</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              theme: {
+                base: 'var(--bg-base)',
+                surface: 'var(--bg-surface)',
+                text: 'var(--text-main)',
+                border: 'var(--border-main)',
+                accent: 'var(--accent-color)',
+              },
+              solana: {
+                purple: '#9945FF',
+                green: '#14F195',
+                dark: '#0a0a0a',
+              },
+              koi: {
+                lime: '#CCFF00',
+                pink: '#FF0099',
+                cyan: '#00FFFF',
+                yellow: '#FFD600',
+                card: '#1A1A1A',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['Space Mono', 'monospace'],
+            },
+            boxShadow: {
+              'neo': '4px 4px 0px 0px var(--shadow-color)',
+              'neo-sm': '2px 2px 0px 0px var(--shadow-color)',
+              'neo-lg': '6px 6px 0px 0px var(--shadow-color)',
+              'neo-color': '4px 4px 0px 0px #9945FF',
+            },
+            animation: {
+              'bounce-small': 'bounce-small 2s infinite',
+              'slide-in-right': 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+            },
+            keyframes: {
+              'bounce-small': {
+                '0%, 100%': { transform: 'translateY(-2%)' },
+                '50%': { transform: 'translateY(0)' },
+              },
+              slideInRight: {
+                '0%': { transform: 'translateX(100%)' },
+                '100%': { transform: 'translateX(0)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        /* Light Mode Defaults */
+        --bg-base: #f0f0f0;
+        --bg-surface: #ffffff;
+        --text-main: #000000;
+        --border-main: #000000;
+        --shadow-color: #000000;
+        --accent-color: #CCFF00;
+        --grid-line: rgba(0, 0, 0, 0.1);
+      }
+
+      .dark {
+        /* Dark Mode Overrides */
+        --bg-base: #0a0a0a;
+        --bg-surface: #1A1A1A;
+        --text-main: #ffffff;
+        --border-main: #ffffff;
+        --shadow-color: #ffffff;
+        --accent-color: #CCFF00;
+        --grid-line: rgba(255, 255, 255, 0.05);
+      }
+
+      body {
+        background-color: var(--bg-base);
+        color: var(--text-main);
+        font-family: 'Space Mono', monospace;
+        overflow-x: hidden;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      /* Grid Background Pattern */
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: 
+          linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      }
+
+      .neo-panel {
+        background-color: var(--bg-surface);
+        border: 2px solid var(--border-main);
+        box-shadow: 4px 4px 0px 0px var(--shadow-color);
+      }
+
+      .neo-button {
+        border: 2px solid var(--border-main);
+        transition: all 0.1s ease;
+      }
+      .neo-button:active {
+        transform: translate(2px, 2px);
+        box-shadow: none !important;
+      }
+
+      .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+      }
+      .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+      }
+      
+      /* Card Flip */
+      .perspective-1000 { perspective: 1000px; }
+      .transform-style-3d { transform-style: preserve-3d; }
+      .backface-hidden { backface-visibility: hidden; }
+      .rotate-y-180 { transform: rotateY(180deg); }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-grid min-h-screen">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

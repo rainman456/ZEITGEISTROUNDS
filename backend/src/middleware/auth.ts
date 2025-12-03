@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { PublicKey } from '@solana/web3.js';
 import { AdminService } from '../services/admin.service';
+import nacl from 'tweetnacl';
+import bs58 from 'bs58';
 
 export interface AuthRequest extends Request {
   userPubkey?: PublicKey;
@@ -16,20 +18,39 @@ export async function requireAdmin(
   next: NextFunction
 ): Promise<void> {
   try {
-    const adminService = new AdminService();
-    
-    // In production, you'd verify a signed message or JWT
-    // For now, we check if the request includes admin credentials
     const adminPubkey = req.headers['x-admin-pubkey'] as string;
+    const message = req.headers['x-message'] as string;
+    const signature = req.headers['x-signature'] as string;
     
-    if (!adminPubkey) {
+    if (!adminPubkey || !message || !signature) {
       res.status(401).json({
         error: 'Unauthorized',
-        message: 'Admin public key required',
+        message: 'Admin authentication required (pubkey, message, signature)',
       });
       return;
     }
 
+    // Verify signature
+    const pubkeyBytes = bs58.decode(adminPubkey);
+    const signatureBytes = bs58.decode(signature);
+    const messageBytes = new TextEncoder().encode(message);
+    
+    const isValid = nacl.sign.detached.verify(
+      messageBytes,
+      signatureBytes,
+      pubkeyBytes
+    );
+    
+    if (!isValid) {
+      res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Invalid signature',
+      });
+      return;
+    }
+
+    // Check if pubkey is admin
+    const adminService = new AdminService();
     const pubkey = new PublicKey(adminPubkey);
     const isAdmin = await adminService.isAdmin(pubkey);
 
