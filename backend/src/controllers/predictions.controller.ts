@@ -15,7 +15,9 @@ export class PredictionsController {
    */
   public placePrediction = async (req: Request, res: Response): Promise<void> => {
     try {
-      const { roundId, outcome, amount, userPubkey } = req.body;
+      const { roundId, outcome, amount } = req.body;
+       // const userPubkey = req.userPubkey || new PublicKey(req.body.userPubkey);
+
 
       const result = await this.predictionService.placePrediction({
         roundId,
