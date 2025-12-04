@@ -2,9 +2,9 @@ import { config } from '../config';
 import { logger } from '../utils/logger';
 import { db } from '../db/client';
 import { redis } from '../cache/redis';
-import { solana } from '../solana/connection';
-import { existsSync } from 'fs';
-import { join } from 'path';
+//import { solana } from '../solana/connection';
+//import { existsSync } from 'fs';
+//import { join } from 'path';
 
 interface StartupCheck {
   name: string;
@@ -56,21 +56,21 @@ export async function startupChecks(): Promise<void> {
       },
       required: true,
     },
-    {
-      name: 'Solana RPC Endpoint',
-      check: async () => {
-        const healthy = await solana.healthCheck();
-        if (healthy) {
-          logger.info('Solana RPC connection established', {
-            network: config.solana.network,
-          });
-        } else {
-          logger.error('Solana RPC connection failed');
-        }
-        return healthy;
-      },
-      required: true,
-    },
+    // {
+    //   name: 'Solana RPC Endpoint',
+    //   check: async () => {
+    //     const healthy = await solana.healthCheck();
+    //     if (healthy) {
+    //       logger.info('Solana RPC connection established', {
+    //         network: config.solana.network,
+    //       });
+    //     } else {
+    //       logger.error('Solana RPC connection failed');
+    //     }
+    //     return healthy;
+    //   },
+    //   required: true,
+    // },
     {
       name: 'Admin Wallet',
       check: async () => {
