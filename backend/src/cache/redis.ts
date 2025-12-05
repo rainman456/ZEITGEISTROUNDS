@@ -4,23 +4,68 @@ import { logger } from '../utils/logger';
 
 class RedisClient {
   private client: Redis;
+  private pubSubClient: Redis;
   private static instance: RedisClient;
+  private connected: boolean = false;
 
   private constructor() {
+    // Parse REDIS_URL and create main Redis client for caching
     this.client = new Redis(config.redis.url, {
-      maxRetriesPerRequest: 3,
+      maxRetriesPerRequest: 5,
       retryStrategy: (times) => {
-        const delay = Math.min(times * 50, 2000);
+        if (times > 5) {
+          logger.error('Redis max retry attempts reached');
+          return null; // Stop retrying
+        }
+        // Exponential backoff with max 3000ms
+        const delay = Math.min(times * 200, 3000);
+        logger.info(`Redis retry attempt ${times}, delay: ${delay}ms`);
         return delay;
       },
+      enableReadyCheck: true,
+      connectTimeout: 60000, // Max retry time
     });
 
+    // Create separate Redis client for pub/sub
+    this.pubSubClient = new Redis(config.redis.url, {
+      maxRetriesPerRequest: 5,
+      retryStrategy: (times) => {
+        if (times > 5) return null;
+        return Math.min(times * 200, 3000);
+      },
+      enableReadyCheck: true,
+      connectTimeout: 60000,
+    });
+
+    // Set up Redis event listeners for main client
     this.client.on('error', (err) => {
       logger.error('Redis client error', err);
     });
 
     this.client.on('connect', () => {
       logger.info('Redis client connected');
+    });
+
+    this.client.on('ready', () => {
+      logger.info('Redis client ready');
+      this.connected = true;
+    });
+
+    this.client.on('reconnecting', (delay: number) => {
+      logger.info(`Redis client reconnecting in ${delay}ms`);
+    });
+
+    // Set up event listeners for pub/sub client
+    this.pubSubClient.on('error', (err) => {
+      logger.error('Redis pub/sub client error', err);
+    });
+
+    this.pubSubClient.on('ready', () => {
+      logger.info('Redis pub/sub client ready');
+    });
+
+    this.pubSubClient.on('reconnecting', (delay: number) => {
+      logger.info(`Redis pub/sub client reconnecting in ${delay}ms`);
     });
   }
 
@@ -113,6 +158,41 @@ class RedisClient {
     }
   }
 
+  /**
+   * Connect to Redis with retry logic
+   */
+  public async connect(): Promise<void> {
+    const maxRetries = 5;
+    const baseDelay = 1000;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        logger.info(`Attempting Redis connection (attempt ${attempt}/${maxRetries})...`);
+        
+        // Test connection with PING command
+        const result = await this.client.ping();
+        
+        if (result === 'PONG') {
+          logger.info('Redis connected successfully');
+          this.connected = true;
+          return;
+        }
+      } catch (error) {
+        logger.error(`Redis connection attempt ${attempt} failed`, error);
+        
+        if (attempt === maxRetries) {
+          logger.error('All Redis connection retries failed');
+          throw new Error('Failed to connect to Redis after maximum retries');
+        }
+        
+        // Exponential backoff
+        const delay = baseDelay * Math.pow(2, attempt - 1);
+        logger.info(`Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
   public async healthCheck(): Promise<boolean> {
     try {
       const result = await this.client.ping();
@@ -123,9 +203,19 @@ class RedisClient {
     }
   }
 
+  public getPubSubClient(): Redis {
+    return this.pubSubClient;
+  }
+
+  public isConnected(): boolean {
+    return this.connected;
+  }
+
   public async close(): Promise<void> {
     await this.client.quit();
-    logger.info('Redis client closed');
+    await this.pubSubClient.quit();
+    this.connected = false;
+    logger.info('Redis clients closed');
   }
 }
 
