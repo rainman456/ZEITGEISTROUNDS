@@ -109,4 +109,9 @@ UnsupportedVerification,
 
 #[msg("Requires off-chain oracle (use admin settlement)")]
 RequiresOffChainOracle,
+
+
+#[msg("Invalid betting window duration (must be between 10 and 300 seconds)")]
+InvalidBettingWindowDuration,
+
 }

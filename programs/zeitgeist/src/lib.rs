@@ -37,7 +37,8 @@ pub mod zeitgeist {
         verification_method: state::VerificationMethod, // ← ADD
         target_value: i64,                              // ← ADD
         data_source: Pubkey,                            // ← ADD
-        oracle: Pubkey,                                 // ← ADD
+        oracle: Pubkey, 
+        betting_window_duration: i64,                                 // ← ADD
     ) -> Result<()> {
         instructions::create_round::handler(
             ctx,
@@ -50,6 +51,7 @@ pub mod zeitgeist {
             target_value,        // ← ADD
             data_source,         // ← ADD
             oracle,              // ← ADD
+            betting_window_duration, // ← ADD
         )
     }
     /// Place a prediction on a round

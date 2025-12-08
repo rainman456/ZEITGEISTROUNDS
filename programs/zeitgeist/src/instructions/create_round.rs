@@ -19,7 +19,8 @@ pub fn handler(
     verification_method: crate::state::VerificationMethod,  // ← ADD
     target_value: i64,                                      // ← ADD
     data_source: Pubkey,                                    // ← ADD
-    oracle: Pubkey,    
+    oracle: Pubkey,  
+    betting_window_duration: i64,  
 ) -> Result<()> {
     let global_state = &mut ctx.accounts.global_state;
     let round = &mut ctx.accounts.round;
@@ -33,11 +34,15 @@ pub fn handler(
     
     validate_future_timestamp(start_time, clock.unix_timestamp)?;
     validate_betting_duration(start_time, end_time, MIN_BETTING_DURATION, MAX_BETTING_DURATION)?;
+    require!(
+    betting_window_duration >= 10 && betting_window_duration <= 300,
+    SocialRouletteError::InvalidBettingWindowDuration
+);
 
 
       // Calculate betting close time (10 seconds after start)
     let betting_close_time = start_time
-        .checked_add(10)
+        .checked_add(betting_window_duration)
         .ok_or(SocialRouletteError::ArithmeticOverflow)?;
     
     // Initialize all round fields explicitly
