@@ -44,12 +44,12 @@ pub fn handler(
         SocialRouletteError::MaxPredictionsReached
     );
     
-    // Transfer funds from user to vault
+    // Transfer funds from payer to vault
     system_program::transfer(
         CpiContext::new(
             ctx.accounts.system_program.to_account_info(),
             system_program::Transfer {
-                from: ctx.accounts.user.to_account_info(),
+                from: ctx.accounts.payer.to_account_info(),
                 to: ctx.accounts.vault.to_account_info(),
             },
         ),

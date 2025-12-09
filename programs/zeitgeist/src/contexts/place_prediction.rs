@@ -23,11 +23,11 @@ pub struct PlacePrediction<'info> {
     
     #[account(
         init,
-        payer = user,
+        payer = payer,
         space = 8 + Prediction::INIT_SPACE,
         seeds = [
             PREDICTION_SEED,
-            round_id.to_le_bytes().as_ref(),  // ✅ Fixed: use round_id, not round.key()
+            round_id.to_le_bytes().as_ref(),
             user.key().as_ref(),
         ],
         bump
@@ -35,8 +35,8 @@ pub struct PlacePrediction<'info> {
     pub prediction: Account<'info, Prediction>,
     
     #[account(
-        init_if_needed,  // ✅ Better: Anchor handles creation
-        payer = user,
+        init_if_needed,
+        payer = payer,
         space = 8 + UserStats::INIT_SPACE,
         seeds = [USER_STATS_SEED, user.key().as_ref()],
         bump
@@ -46,13 +46,16 @@ pub struct PlacePrediction<'info> {
     /// CHECK: Vault PDA for holding funds
     #[account(
         mut,
-        seeds = [VAULT_SEED, round_id.to_le_bytes().as_ref()],  // ✅ Fixed: use round_id
+        seeds = [VAULT_SEED, round_id.to_le_bytes().as_ref()],
         bump
     )]
     pub vault: AccountInfo<'info>,
     
     #[account(mut)]
-    pub user: Signer<'info>,
+    pub payer: Signer<'info>,
+    
+    /// CHECK: User account for PDA derivation (can be anyone in custodial mode)
+    pub user: AccountInfo<'info>,
     
     pub system_program: Program<'info, System>,
 }
